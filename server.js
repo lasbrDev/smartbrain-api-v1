@@ -13,10 +13,8 @@ const signin = require('./controllers/signin');
         client: 'pg',
         connection:
         {
-            host: '127.0.0.1',
-            user: 'lasbr',
-            password: '',
-            database: 'brainDB'
+            host: process.env.DATABASE_URL,
+            ssl: true
         }
     });
 
