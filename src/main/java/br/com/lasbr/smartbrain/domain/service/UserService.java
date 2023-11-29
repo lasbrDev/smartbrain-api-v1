@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
+    @Service
     @Slf4j
     public class UserService {
 
@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
             this.repository = repository;
             this.passwordEncoder = passwordEncoder;
         }
-
 
         public UserResponse registerUser(UserRequest request) {
             try {

@@ -6,5 +6,6 @@ package br.com.lasbr.smartbrain.infra.exception;
             }
 
             public RegistrationException(String message) {
+                super(message);
             }
         }
