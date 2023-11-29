@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
         private void validateRegistrationData(UserRequest request) throws RegistrationException {
             String email = request.email();
 
-            if (email == null || isValidEmail(email)) {
+            if (email == null || !isValidEmail(email)) {
                 throw new RegistrationException("Endereço de e-mail inválido.");
             }
         }
