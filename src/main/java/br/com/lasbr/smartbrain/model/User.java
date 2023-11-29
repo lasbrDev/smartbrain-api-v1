@@ -23,5 +23,4 @@ import lombok.NoArgsConstructor;
 
         public User(String name, String email, String hashedPassword) {
         }
-
     }
