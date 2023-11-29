@@ -5,11 +5,13 @@ import br.com.lasbr.smartbrain.domain.dto.UserRequest;
 import br.com.lasbr.smartbrain.domain.dto.UserResponse;
 import br.com.lasbr.smartbrain.infra.exception.RegistrationException;
 import br.com.lasbr.smartbrain.domain.model.User;
+import br.com.lasbr.smartbrain.infra.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,5 +56,17 @@ import java.util.regex.Pattern;
             Pattern pattern = Pattern.compile(emailRegex);
             Matcher matcher = pattern.matcher(email);
             return matcher.matches();
+        }
+
+        public UserResponse getUserById(Long id) {
+            Optional<User> optionalUser = repository.findById(id);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                log.info("Perfil do usuário obtido com sucesso: {}", user.getName());
+                return new UserResponse(user);
+            } else {
+                log.warn("Usuário com o ID {} não encontrado", id);
+                throw new UserNotFoundException("Usuário não encontrado");
+            }
         }
     }
