@@ -1,4 +1,4 @@
 package br.com.lasbr.smartbrain.dto;
 
-    public record UserResponse() {
+    public record UserResponse(String name, String email) {
     }

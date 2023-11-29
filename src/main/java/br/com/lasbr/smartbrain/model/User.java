@@ -20,4 +20,8 @@ import lombok.NoArgsConstructor;
         private String name;
         private String email;
         private String password;
+
+        public User(String name, String email, String hashedPassword) {
+        }
+
     }
