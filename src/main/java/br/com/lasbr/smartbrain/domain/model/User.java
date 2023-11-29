@@ -1,4 +1,4 @@
-package br.com.lasbr.smartbrain.model;
+package br.com.lasbr.smartbrain.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

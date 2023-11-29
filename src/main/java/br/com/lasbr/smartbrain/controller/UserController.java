@@ -1,8 +1,8 @@
 package br.com.lasbr.smartbrain.controller;
 
-import br.com.lasbr.smartbrain.dto.UserRequest;
-import br.com.lasbr.smartbrain.dto.UserResponse;
-import br.com.lasbr.smartbrain.service.UserService;
+import br.com.lasbr.smartbrain.domain.dto.UserRequest;
+import br.com.lasbr.smartbrain.domain.dto.UserResponse;
+import br.com.lasbr.smartbrain.domain.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

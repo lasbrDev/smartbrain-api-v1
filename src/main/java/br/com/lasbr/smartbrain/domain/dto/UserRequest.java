@@ -1,4 +1,4 @@
-package br.com.lasbr.smartbrain.dto;
+package br.com.lasbr.smartbrain.domain.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
