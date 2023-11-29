@@ -1,5 +1,6 @@
 package br.com.lasbr.smartbrain.domain.service;
 
+import br.com.lasbr.smartbrain.domain.dto.UserLoginRequest;
 import br.com.lasbr.smartbrain.domain.repositories.UserRepository;
 import br.com.lasbr.smartbrain.domain.dto.UserRequest;
 import br.com.lasbr.smartbrain.domain.dto.UserResponse;
@@ -67,6 +68,18 @@ import java.util.regex.Pattern;
             } else {
                 log.warn("Usuário com o ID {} não encontrado", id);
                 throw new UserNotFoundException("Usuário não encontrado");
+            }
+        }
+
+
+        public UserResponse loginUser(UserLoginRequest loginRequest) {
+            try {
+                String email = loginRequest.email();
+                String password = loginRequest.password();
+
+                if (email == null || isValidEmail(email)) {
+
+                }
             }
         }
     }

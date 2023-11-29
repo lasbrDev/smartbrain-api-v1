@@ -1,5 +1,6 @@
 package br.com.lasbr.smartbrain.controller;
 
+import br.com.lasbr.smartbrain.domain.dto.UserLoginRequest;
 import br.com.lasbr.smartbrain.domain.dto.UserRequest;
 import br.com.lasbr.smartbrain.domain.dto.UserResponse;
 import br.com.lasbr.smartbrain.domain.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.naming.AuthenticationException;
 import java.net.URI;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 
@@ -51,6 +53,17 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        }
+
+        public ResponseEntity<UserResponse> loginUser(@RequestBody UserLoginRequest loginRequest) {
+            try {
+                UserResponse userResponse = service.loginUser(loginRequest);
+                return new ResponseEntity<>(userResponse, HttpStatus.OK);
+            } catch (AuthenticationException e) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
     }

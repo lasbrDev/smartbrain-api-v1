@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
     @Entity
     @Table(name = "users")
     @NoArgsConstructor
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
         private String name;
         private String email;
         private String password;
+        private LocalDateTime createdAt;
 
         public User(String name, String email, String hashedPassword) {
         }
