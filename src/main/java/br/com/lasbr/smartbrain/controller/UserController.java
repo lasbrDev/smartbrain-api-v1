@@ -18,7 +18,7 @@ import javax.naming.AuthenticationException;
 import java.net.URI;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 
-@RestController
+    @RestController
     @RequestMapping("api/v1/register")
     @Slf4j
     public class UserController {
@@ -56,14 +56,15 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
             }
         }
 
-        public ResponseEntity<UserResponse> loginUser(@RequestBody UserLoginRequest loginRequest) {
-            try {
-                UserResponse userResponse = service.loginUser(loginRequest);
-                return new ResponseEntity<>(userResponse, HttpStatus.OK);
-            } catch (AuthenticationException e) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+//        @PostMapping
+//        public ResponseEntity<UserResponse> loginUser(@RequestBody UserLoginRequest loginRequest) {
+//            try {
+//                UserResponse userResponse = service.loginUser(loginRequest);
+//                return new ResponseEntity<>(userResponse, HttpStatus.OK);
+//            } catch (AuthenticationException e) {
+//                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//            } catch (Exception e) {
+//                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//            }
+//        }
     }

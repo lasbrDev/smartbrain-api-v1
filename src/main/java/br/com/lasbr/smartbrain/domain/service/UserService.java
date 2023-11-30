@@ -71,15 +71,14 @@ import java.util.regex.Pattern;
             }
         }
 
-
-        public UserResponse loginUser(UserLoginRequest loginRequest) {
-            try {
-                String email = loginRequest.email();
-                String password = loginRequest.password();
-
-                if (email == null || isValidEmail(email)) {
-
-                }
-            }
-        }
+//        public UserResponse loginUser(UserLoginRequest loginRequest) {
+//            try {
+//                String email = loginRequest.email();
+//                String password = loginRequest.password();
+//
+//                if (email == null || isValidEmail(email)) {
+//
+//                }
+//            }
+//        }
     }
