@@ -70,15 +70,4 @@ import java.util.regex.Pattern;
                 throw new UserNotFoundException("Usuário não encontrado");
             }
         }
-
-//        public UserResponse loginUser(UserLoginRequest loginRequest) {
-//            try {
-//                String email = loginRequest.email();
-//                String password = loginRequest.password();
-//
-//                if (email == null || isValidEmail(email)) {
-//
-//                }
-//            }
-//        }
     }
