@@ -1,24 +1,27 @@
 package br.com.lasbr.smartbrain.domain.service;
 
-import br.com.lasbr.smartbrain.domain.dto.UserLoginRequest;
-import br.com.lasbr.smartbrain.domain.repositories.UserRepository;
-import br.com.lasbr.smartbrain.domain.dto.UserRequest;
-import br.com.lasbr.smartbrain.domain.dto.UserResponse;
-import br.com.lasbr.smartbrain.infra.exception.RegistrationException;
-import br.com.lasbr.smartbrain.domain.model.User;
-import br.com.lasbr.smartbrain.infra.exception.UserNotFoundException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import br.com.lasbr.smartbrain.domain.dto.UserRequest;
+import br.com.lasbr.smartbrain.domain.dto.UserResponse;
+import br.com.lasbr.smartbrain.domain.model.User;
+import br.com.lasbr.smartbrain.domain.repositories.UserRepository;
+import br.com.lasbr.smartbrain.infra.exception.RegistrationException;
+import br.com.lasbr.smartbrain.infra.exception.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+
     @Service
     @Slf4j
-    public class UserService {
+    public class UserService implements UserDetailsService {
 
         private final UserRepository repository;
         private final BCryptPasswordEncoder passwordEncoder;
@@ -32,15 +35,17 @@ import java.util.regex.Pattern;
         public UserResponse registerUser(UserRequest request) {
             try {
                 validateRegistrationData(request);
-                String hashedPassword = passwordEncoder.encode(request.password());
-                User newUser = new User(request.name(), request.email(), hashedPassword);
-                repository.save(newUser);
-
-                log.info("Usuário registrado com sucesso: {}", newUser.getName());
-                return new UserResponse(newUser);
+                User user = new User(request);
+                user.setPassword(passwordEncoder.encode(request.password()));
+                repository.save(user);
+                log.info("Usuário registrado com sucesso: {}", user.getName());
+                return new UserResponse(user);
+            } catch (RegistrationException e) {
+                log.warn("Erro ao registrar usuário: {}", e.getMessage());
+                throw e;
             } catch (Exception e) {
-                log.error("Erro ao registrar usuário", e);
-                throw new RegistrationException("Erro ao registrar usuário", e);
+                log.error("Erro ao registrar usuário: {}", e.getMessage());
+                throw e;
             }
         }
 
@@ -69,5 +74,9 @@ import java.util.regex.Pattern;
                 log.warn("Usuário com o ID {} não encontrado", id);
                 throw new UserNotFoundException("Usuário não encontrado");
             }
+        }
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            return repository.findByEmail(username);
         }
     }
