@@ -26,7 +26,7 @@ import java.net.URI;
             this.service = service;
         }
 
-        @PostMapping("/register")
+        @PostMapping
         public ResponseEntity<UserResponse> registerUser(
                 @RequestBody @Valid UserRequest request, UriComponentsBuilder uriBuilder) {
             UserResponse userResponse = service.registerUser(request);

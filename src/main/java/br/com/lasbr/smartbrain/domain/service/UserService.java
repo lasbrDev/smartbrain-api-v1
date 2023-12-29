@@ -48,8 +48,12 @@ import org.springframework.transaction.annotation.Transactional;
                 User user = new User(request.name(), request.email(), passwordEncoder.encode(request.password()));
                 User savedUser = repository.save(user);
                 logger.info("Usuário registrado com sucesso: {}", savedUser.getEmail());
+                return new UserResponse(savedUser.getId(), savedUser.getName(),
+                        savedUser.getEmail(), savedUser.getPassword(), savedUser.getCreatedAt());
             } catch (DataIntegrityViolationException e) {
-                logger.error("Erro ao registrar usuário", e.getMessage());
-            } throw new RegistrationException("Erro ao registrar usuário");
+                logger.error("Erro ao registrar usuário", e);
+            }
+            Throwable e = null;
+            throw new RegistrationException("Erro ao registrar usuário", e);
         }
     }
