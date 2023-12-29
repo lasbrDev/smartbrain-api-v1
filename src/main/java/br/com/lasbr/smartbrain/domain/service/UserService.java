@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
                 User user = new User(request.name(), request.email(), passwordEncoder.encode(request.password()));
                 User savedUser = repository.save(user);
                 logger.info("Usuário registrado com sucesso: {}", savedUser.getEmail());
-            } catch (Exception e) {
+            } catch (DataIntegrityViolationException e) {
                 logger.error("Erro ao registrar usuário", e.getMessage());
             } throw new RegistrationException("Erro ao registrar usuário");
         }
