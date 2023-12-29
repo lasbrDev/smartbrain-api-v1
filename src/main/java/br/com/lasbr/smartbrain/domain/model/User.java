@@ -3,7 +3,6 @@ package br.com.lasbr.smartbrain.domain.model;
 import br.com.lasbr.smartbrain.domain.dto.UserRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 
     @Entity(name = "User")
     @Table(name = "users")
-    @Data
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode(of = "id")
@@ -31,11 +30,14 @@ import java.util.List;
         private String password;
         private LocalDateTime createdAt;
 
-        public User(UserRequest request) {
-            this.name = request.name();
-            this.email = request.email();
-            this.password = request.password();
+        @PrePersist
+        private void prePersist() {
             this.createdAt = LocalDateTime.now();
+        }
+        public User(String name, String email, String password) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
         }
 
         @Override

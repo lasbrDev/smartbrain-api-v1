@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
         private final AuthenticationManager manager;
         private final TokenService service;
-
         @Autowired
         public AuthenticationController(AuthenticationManager manager, TokenService service) {
             this.manager = manager;
@@ -30,9 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
         @PostMapping
         public ResponseEntity<TokenJWTRequest> login(@RequestBody @Valid UserLoginRequest request) {
-            var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
-            var authentication = manager.authenticate(authenticationToken);
-            var tokenJWT = service.generateToken((User) authentication.getPrincipal());
+            String tokenJWT = service.generateToken(request);
             return ResponseEntity.ok(new TokenJWTRequest(tokenJWT));
         }
     }

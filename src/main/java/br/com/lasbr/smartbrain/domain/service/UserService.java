@@ -4,9 +4,16 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import br.com.lasbr.smartbrain.domain.dto.UserLoginRequest;
+import br.com.lasbr.smartbrain.domain.dto.UserLoginResponse;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,67 +23,32 @@ import br.com.lasbr.smartbrain.domain.dto.UserResponse;
 import br.com.lasbr.smartbrain.domain.model.User;
 import br.com.lasbr.smartbrain.domain.repositories.UserRepository;
 import br.com.lasbr.smartbrain.infra.exception.RegistrationException;
-import br.com.lasbr.smartbrain.infra.exception.UserNotFoundException;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
     @Service
-    @Slf4j
-    public class UserService implements UserDetailsService {
+    public class UserService {
 
         private final UserRepository repository;
         private final BCryptPasswordEncoder passwordEncoder;
-        
+        private final Logger logger = LoggerFactory.getLogger(UserService.class);
+
         @Autowired
         public UserService(UserRepository repository, BCryptPasswordEncoder passwordEncoder) {
             this.repository = repository;
             this.passwordEncoder = passwordEncoder;
         }
 
+        @Transactional
         public UserResponse registerUser(UserRequest request) {
             try {
-                validateRegistrationData(request);
-                User user = new User(request);
-                user.setPassword(passwordEncoder.encode(request.password()));
-                repository.save(user);
-                log.info("Usuário registrado com sucesso: {}", user.getName());
-                return new UserResponse(user);
-            } catch (RegistrationException e) {
-                log.warn("Erro ao registrar usuário: {}", e.getMessage());
-                throw e;
+                if (repository.existsByEmail(request.email())) {
+                    throw new IllegalArgumentException("E-mail já está em uso.");
+                }
+                User user = new User(request.name(), request.email(), passwordEncoder.encode(request.password()));
+                User savedUser = repository.save(user);
+                logger.info("Usuário registrado com sucesso: {}", savedUser.getEmail());
             } catch (Exception e) {
-                log.error("Erro ao registrar usuário: {}", e.getMessage());
-                throw e;
-            }
-        }
-
-        private void validateRegistrationData(UserRequest request) throws RegistrationException {
-            String email = request.email();
-
-            if (email == null || !isValidEmail(email)) {
-                throw new RegistrationException("Endereço de e-mail inválido.");
-            }
-        }
-
-        private boolean isValidEmail(String email) {
-            String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-            Pattern pattern = Pattern.compile(emailRegex);
-            Matcher matcher = pattern.matcher(email);
-            return matcher.matches();
-        }
-
-        public UserResponse getUserById(Long id) {
-            Optional<User> optionalUser = repository.findById(id);
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                log.info("Perfil do usuário obtido com sucesso: {}", user.getName());
-                return new UserResponse(user);
-            } else {
-                log.warn("Usuário com o ID {} não encontrado", id);
-                throw new UserNotFoundException("Usuário não encontrado");
-            }
-        }
-        @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            return repository.findByEmail(username);
+                logger.error("Erro ao registrar usuário", e.getMessage());
+            } throw new RegistrationException("Erro ao registrar usuário");
         }
     }
