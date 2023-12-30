@@ -4,9 +4,14 @@ import br.com.lasbr.smartbrain.infra.exception.ClarifaiServiceException;
 import com.clarifai.channel.ClarifaiChannel;
 import com.clarifai.credentials.ClarifaiCallCredentials;
 import com.clarifai.grpc.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+    @Service
     public class ClarifaiService {
 
+        private static final Logger logger = LoggerFactory.getLogger(ClarifaiService.class);
         private static final String PAT = "YOUR_PAT_HERE";
         private static final String USER_ID = "clarifai";
         private static final String APP_ID = "main";
@@ -33,6 +38,7 @@ import com.clarifai.grpc.api.*;
                                 .build()
                 );
             } catch (Exception e) {
+                logger.error("Erro ao chamar o serviço Clarifai", e);
                 throw new ClarifaiServiceException("Erro ao chamar o serviço Clarifai", e);
             }
         }
