@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
     public class ClarifaiService {
 
         private static final Logger logger = LoggerFactory.getLogger(ClarifaiService.class);
-        private static final String PAT = "YOUR_PAT_HERE";
+        private static final String PAT = "11412dfb88e04deabfa9336c2156367f";
         private static final String USER_ID = "clarifai";
         private static final String APP_ID = "main";
         private static final String MODEL_ID = "general-image-detection";
